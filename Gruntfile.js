@@ -1,6 +1,11 @@
-'use strict';
-
 module.exports = function (grunt) {
+    'use strict';
+
+    var expandFiles = function (glob) {
+        return grunt.file.expand({
+            filter: 'isFile'
+        }, glob);
+    };
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -35,16 +40,24 @@ module.exports = function (grunt) {
             },
 
             demo: {
-                src: ['./src/demo/App.js'],
+                src: ['./src/js/demo/App.js'],
                 dest: 'dist/demo.js',
                 options: {
-                    alias: ["./src/demo/App.js:DemoApp"],
+                    alias: ["./src/js/demo/App.js:DemoApp"],
                 },
+            },
+
+            testSources: {
+                src: [ 'src/**/*.js', ],
+                dest: 'dist/test_sources.js',
+                options: {
+                    require: expandFiles([ './src/**/*.js', ])
+                }
             },
 
             test: {
                 src: [
-                    'test/spec/**/*.js',
+                    'tests/spec/**/*.js',
                 ],
                 dest: 'dist/test_bundle.js',
                 options: {
@@ -59,7 +72,7 @@ module.exports = function (grunt) {
             },
 
             demo: {
-                src: 'dist/demo.js'
+                src: 'dist/test_sources.js'
             },
         },
 
@@ -72,7 +85,6 @@ module.exports = function (grunt) {
         }
     });
 
-    // These plugins provide necessary tasks.
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-browserify');
@@ -80,6 +92,5 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-jasmine-node');
 
-    // Default task.
-    grunt.registerTask('default', ['jshint', 'jasmine_node', 'browserify', 'jasmine', 'uglify']);
+    grunt.registerTask('build-demo', ['jshint', 'browserify', 'jasmine:demo', 'uglify:demo']);
 };
