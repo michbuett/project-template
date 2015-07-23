@@ -1,5 +1,5 @@
 {
-    "biwise": true,
+    "bitwise": true,
     "eqeqeq": true,
     "freeze": true,
     "esnext": true,
@@ -8,7 +8,7 @@
     "noarg": true,
     "nocomma": true,
     "nonew": true,
-    "stric": true,
+    "strict": true,
     "undef": true,
     "unused": "vars",
     "eqnull": true,
